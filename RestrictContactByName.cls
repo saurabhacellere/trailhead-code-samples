@@ -11,3 +11,18 @@ trigger RestrictContactByName on Contact (before insert, before update) {
 
 
 }
+
+public class Foo {
+    public Contact foo(String status, String ID) {
+        Contact c = [SELECT Status__c FROM Contact WHERE Id=:ID];
+
+        // Make sure we can update the database before even trying
+        if (!Schema.sObjectType.Contact.fields.Name.isUpdateable()) {
+            return null;
+        }
+
+        c.Status__c = status;
+        update c;
+        return c;
+    }
+}
